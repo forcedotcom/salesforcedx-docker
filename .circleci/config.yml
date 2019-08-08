@@ -1,0 +1,37 @@
+version: 2.1
+
+variables:
+  - &node-build-image
+    - image: circleci/node:10.14.2-stretch
+  - &run-docker-build
+    name: Build Docker Image
+    command: |
+      TAG=$CIRCLE_SHA1
+      docker build -t $DOCKER_IMAGE:$TAG .
+
+jobs:
+  sfdx-docker:
+    docker: *node-build-image
+    environment:
+      DOCKER_IMAGE: circleci/sfdx
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: *run-docker-build
+
+workflows:
+  version: 2
+  commit-workflow:
+    jobs:
+      - sfdx-docker
+  scheduled-workflow:
+    triggers:
+      - schedule:
+          cron: '0 0 * * *'
+          filters:
+            branches:
+              only:
+                - master
+                - develop
+    jobs:
+      - sfdx-docker

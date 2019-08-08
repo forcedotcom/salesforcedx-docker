@@ -18,6 +18,8 @@ jobs:
       - checkout
       - setup_remote_docker
       - run: *run-docker-build
+      - run: docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'sfdx --version'
+      - run: docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'java -version'
 
 workflows:
   version: 2

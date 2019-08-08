@@ -1,10 +1,11 @@
 FROM heroku/heroku:18
 
 ENV DEBIAN_FRONTEND=noninteractive
+ARG VERSION=latest
 RUN apt-get update
 RUN curl -sL https://deb.nodesource.com/setup_10.x |  bash -
 RUN apt install --assume-yes openjdk-11-jdk-headless nodejs
-RUN npm install --global sfdx-cli
+RUN npm install --global sfdx-cli@${VERSION}
 
 # Create cert in order to use in JWT flow
 # https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_auth_key_and_cert.htm

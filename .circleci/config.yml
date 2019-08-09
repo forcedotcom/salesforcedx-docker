@@ -6,9 +6,7 @@ variables:
   - &run-docker-build
     name: Build Docker Image
     command: |
-      echo "image:tag=> " $DOCKER_IMAGE:$TAG
       docker build -t $DOCKER_IMAGE:$TAG .
-
 jobs:
   sfdx-docker:
     docker: *node-build-image
@@ -24,9 +22,17 @@ jobs:
       - run:
           name: Verify Build
           command: |
-            echo "image:tag--> " $DOCKER_IMAGE:$TAG
-            docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'sfdx --version'
-            docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'java -version'
+            SFDX_CLI_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'sfdx --version')"
+            JAVA_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'java -version')"
+            if [[ ((`echo $SFDX_CLI_VERSION | grep -c "sfdx-cli/"` > 0))]]; 
+            else
+              echo "The sfdx-cli installation was not verified"
+            fi
+            if [[ ((`echo $JAVA_VERSION | grep -c "openjdk version"` > 0))]]; 
+            else
+              echo "The Java installation was not verified"
+            fi
+            
 
 workflows:
   version: 2

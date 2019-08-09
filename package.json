@@ -1,0 +1,9 @@
+{
+  "name": "salesforcedx-docker",
+  "private": true,
+  "publisher": "salesforce",
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "shelljs": "^0.8.3"
+  }
+}

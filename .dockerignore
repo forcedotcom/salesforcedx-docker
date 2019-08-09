@@ -1,3 +1,11 @@
 README.md
 LICENSE
+.gitignore
+package.json
+yarn.lock
+
 .circleci/
+.github/
+scripts/
+node_modules/
+docs/

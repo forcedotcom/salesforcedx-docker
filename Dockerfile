@@ -5,7 +5,7 @@ ARG SALESFORCE_CLI_VERSION=latest
 RUN apt-get update
 RUN curl -sL https://deb.nodesource.com/setup_10.x |  bash -
 RUN apt install --assume-yes openjdk-11-jdk-headless nodejs
-RUN npm install --global sfdx-cli@${SALESFORCE_CLI_VERSION}}
+RUN npm install --global sfdx-cli@${SALESFORCE_CLI_VERSION}
 
 # Create cert in order to use in JWT flow
 # https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_auth_key_and_cert.htm

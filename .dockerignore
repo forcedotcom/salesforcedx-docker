@@ -1,6 +1,7 @@
 README.md
 LICENSE
 .gitignore
+.yarnrc
 package.json
 yarn.lock
 

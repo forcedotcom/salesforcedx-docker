@@ -4,6 +4,7 @@ const shell = require('shelljs');
 shell.set('-e');
 shell.set('+v');
 
+// This needs to change when we are ready to publish
 const DOCKER_HUB_REPOSITORY = 'vazexqi/salesforcedx';
 
 // Checks that you have the Docker CLI installed
@@ -45,19 +46,11 @@ if (!SALESFORCE_CLI_VERSION) {
 const dockerBuildExitCode = shell.exec(
   `docker build --build-arg SALESFORCE_CLI_VERSION=${SALESFORCE_CLI_VERSION} --tag ${DOCKER_HUB_REPOSITORY}:${SALESFORCE_CLI_VERSION} .`
 );
-if (dockerBuildExitCode !== 0) {
-  shell.echo('Build failed. Please take a look at the output and try again');
-  shell.exit(-1);
-}
 
 // Push to the Docker Hub Registry
 const dockerPushExitCode = shell.exec(
   `docker push ${DOCKER_HUB_REPOSITORY}:${SALESFORCE_CLI_VERSION}`
 );
-if (dockerPushExitCode !== 0) {
-  shell.echo('Push failed. Please take a look at the output and try again');
-  shell.exit(-1);
-}
 
 // If we are on the master branch, also update the latest tag
 const currentBranch = shell.exec('git rev-parse --abbrev-ref HEAD', {

@@ -6,7 +6,6 @@ variables:
   - &run-docker-build
     name: Build Docker Image
     command: |
-      TAG=$CIRCLE_SHA1
       echo "image:tag=> " $DOCKER_IMAGE:$TAG
       docker build -t $DOCKER_IMAGE:$TAG .
 
@@ -15,6 +14,7 @@ jobs:
     docker: *node-build-image
     environment:
       DOCKER_IMAGE: circleci/sfdx
+      TAG: $CIRCLE_SHA1
     steps:
       - checkout
       - setup_remote_docker
@@ -22,7 +22,6 @@ jobs:
       - run:
           name: Verify Build
           command: |
-            TAG=$CIRCLE_SHA1
             echo "image:tag--> " $DOCKER_IMAGE:$TAG
             docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'sfdx --version'
             docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'java -version'

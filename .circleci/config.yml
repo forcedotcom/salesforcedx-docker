@@ -22,6 +22,7 @@ jobs:
       - run:
           name: Verify Build
           command: |
+            TAG=$CIRCLE_SHA1
             echo "image:tag--> " $DOCKER_IMAGE:$TAG
             docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'sfdx --version'
             docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'java -version'

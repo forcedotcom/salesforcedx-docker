@@ -3,10 +3,13 @@ LICENSE
 .gitignore
 .yarnrc
 package.json
+package-lock.json
 yarn.lock
 
+.git
 .circleci/
 .github/
+.vscode
 scripts/
 node_modules/
 docs/

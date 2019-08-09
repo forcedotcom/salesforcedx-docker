@@ -24,11 +24,15 @@ jobs:
           command: |
             SFDX_CLI_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'sfdx --version')"
             JAVA_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'java -version')"
-            if [[ ((`echo $SFDX_CLI_VERSION | grep -c "sfdx-cli/"` > 0))]]; 
+            if [[ ((`echo $SFDX_CLI_VERSION | grep -c "sfdx-cli/"` > 0))]]
+            then
+              echo "sfdx-cli installed" 
             else
               echo "The sfdx-cli installation was not verified"
             fi
-            if [[ ((`echo $JAVA_VERSION | grep -c "openjdk version"` > 0))]]; 
+            if [[ ((`echo $JAVA_VERSION | grep -c "openjdk version"` > 0))]]
+            then
+              echo "Java installed" 
             else
               echo "The Java installation was not verified"
             fi

@@ -12,12 +12,14 @@ variables:
 jobs:
   sfdx-docker:
     docker: *node-build-image
-    environment:
-      DOCKER_IMAGE: circleci/sfdx
-      TAG: $CIRCLE_SHA1
     steps:
       - checkout
       - setup_remote_docker
+      - run:
+          name: Setup Environment Variables
+          command: |
+            echo "export DOCKER_IMAGE=circleci/sfdx" >> $BASH_ENV
+            echo "export TAG=$CIRCLE_SHA1" >> $BASH_ENV
       - run: *run-docker-build
       - run:
           name: Verify Build

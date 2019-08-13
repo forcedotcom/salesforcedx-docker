@@ -23,18 +23,18 @@ jobs:
           name: Verify Build
           command: |
             SFDX_CLI_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'sfdx --version')"
-            JAVA_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'java -version')"
+            JAVA_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'java --version | head -n 1')"
             if [[ ((`echo $SFDX_CLI_VERSION | grep -c "sfdx-cli/"` > 0))]]
             then
-              echo "sfdx-cli installed" 
+              echo "sfdx-cli installed -" $SFDX_CLI_VERSION 
             else
-              echo "The sfdx-cli installation was not verified"
+              echo "The sfdx-cli installation could not be verified"
             fi
-            if [[ ((`echo $JAVA_VERSION | grep -c "openjdk version"` > 0))]]
+            if [[ ((`echo $JAVA_VERSION | grep -c "openjdk 11.0.4"` > 0))]]
             then
-              echo "Java installed" 
+             echo "Java installed -" $JAVA_VERSION 
             else
-              echo "The Java installation was not verified"
+              echo "The Java installation could not be verified"
             fi
             
 

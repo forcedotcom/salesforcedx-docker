@@ -2,10 +2,13 @@ FROM heroku/heroku:18
 
 ENV DEBIAN_FRONTEND=noninteractive
 ARG SALESFORCE_CLI_VERSION=latest
-RUN apt-get update
-RUN curl -sL https://deb.nodesource.com/setup_10.x |  bash -
-RUN apt install --assume-yes openjdk-11-jdk-headless nodejs
-RUN npm install --global sfdx-cli@${SALESFORCE_CLI_VERSION}
+RUN apt-get update \
+    && curl -s -o nodejs.deb https://deb.nodesource.com/node_10.x/pool/main/n/nodejs/nodejs_10.16.2-1nodesource1_amd64.deb \
+    && apt-get install --assume-yes \ 
+    ./nodejs.deb \ 
+    openjdk-11-jdk-headless \
+    && npm install --global sfdx-cli@${SALESFORCE_CLI_VERSION} \
+    && rm -rf ./nodejs.deb
 
 RUN apt-get autoremove --assume-yes \
     && apt-get clean --assume-yes \

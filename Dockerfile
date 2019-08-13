@@ -6,7 +6,7 @@ RUN apt-get update \
     && curl -s -o nodejs.deb https://deb.nodesource.com/node_10.x/pool/main/n/nodejs/nodejs_10.16.2-1nodesource1_amd64.deb \
     && apt-get install --assume-yes \ 
     ./nodejs.deb \ 
-    openjdk-11-jdk-headless \
+    openjdk-11-jdk-headless=11.0.4+11-1ubuntu2~18.04.3 \
     && npm install --global sfdx-cli@${SALESFORCE_CLI_VERSION} \
     && rm -rf ./nodejs.deb
 

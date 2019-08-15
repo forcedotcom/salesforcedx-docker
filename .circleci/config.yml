@@ -6,18 +6,47 @@ variables:
   - &run-docker-build
     name: Build Docker Image
     command: |
-      TAG=$CIRCLE_SHA1
       docker build -t $DOCKER_IMAGE:$TAG .
-
 jobs:
   sfdx-docker:
     docker: *node-build-image
-    environment:
-      DOCKER_IMAGE: circleci/sfdx
     steps:
       - checkout
       - setup_remote_docker
+      - run:
+          name: Setup Environment Variables
+          command: |
+            echo "export DOCKER_IMAGE=circleci/sfdx" >> $BASH_ENV
+            echo "export TAG=$CIRCLE_SHA1" >> $BASH_ENV
       - run: *run-docker-build
+      - run:
+          name: Verify Build
+          command: |
+            SFDX_CLI_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'sfdx --version')"
+            JAVA_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'java --version | head -n 1')"
+            NODE_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'node -v')"
+            if [[ ((`echo $SFDX_CLI_VERSION | grep -c "sfdx-cli/"` > 0))]]
+            then
+              echo "sfdx-cli installed -" $SFDX_CLI_VERSION 
+            else
+              echo "The sfdx-cli installation could not be verified"
+              exit 1
+            fi
+            if [[ ((`echo $JAVA_VERSION | grep -c "openjdk 11.0.4"` > 0))]]
+            then
+             echo "Java installed -" $JAVA_VERSION 
+            else
+              echo "The Java installation could not be verified"
+              exit 1
+            fi
+            if [[ ((`echo $NODE_VERSION | grep -c "v10.16.2"` > 0))]]
+            then
+             echo "Node installed -" $NODE_VERSION 
+            else
+              echo "The Node installation could not be verified"
+              exit 1
+            fi
+            
 
 workflows:
   version: 2

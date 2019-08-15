@@ -10,7 +10,7 @@ RUN apt-get install --assume-yes \
     ./nodejs.deb \ 
     openjdk-11-jdk-headless=11.0.4+11-1ubuntu2~18.04.3 \
     && npm install --global sfdx-cli@${SALESFORCE_CLI_VERSION} \
-    && rm -rf ./nodejs.deb
+    && rm nodejs.deb node-file-lock.sha
 
 RUN apt-get autoremove --assume-yes \
     && apt-get clean --assume-yes \

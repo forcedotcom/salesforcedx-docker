@@ -1,2 +1,2 @@
 # salesforcedx-docker
-The official Dockerfile for Salesforce DX
+The official Dockerfile for Salesforce DX.

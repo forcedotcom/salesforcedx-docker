@@ -82,5 +82,5 @@ if (/master/.test(currentBranch)) {
 // Create a git tag if we are publishing a specific version
 if (!/latest/.test(DOCKER_IMAGE_VERSION)) {
   shell.exec(`git tag ${DOCKER_IMAGE_VERSION}`);
-  shell.exec(`git push tags`);
+  shell.exec(`git push --tags`);
 }

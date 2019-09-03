@@ -62,7 +62,7 @@ const dockerBuildExitCode = shell.exec(
 
 // Push to the Docker Hub Registry
 const dockerPushExitCode = shell.exec(
-  `docker push ${DOCKER_HUB_REPOSITORY}:${SALESFORCE_CLI_VERSION}`
+  `docker push ${DOCKER_HUB_REPOSITORY}:${DOCKER_IMAGE_VERSION}`
 );
 
 // If we are on the master branch, also update the latest tag on Dockerhub

@@ -5,7 +5,7 @@ shell.set('-e');
 shell.set('+v');
 
 // This needs to change when we are ready to publish
-const DOCKER_HUB_REPOSITORY = 'salesforce/salesforcedx';
+const DOCKER_HUB_REPOSITORY = 'therealjonnyhork/salesforcedx';
 
 // Checks that you have the Docker CLI installed
 if (!shell.which('docker')) {

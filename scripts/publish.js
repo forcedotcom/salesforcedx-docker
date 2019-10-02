@@ -56,19 +56,25 @@ if (checkTags.includes(DOCKER_IMAGE_VERSION)) {
 }
 
 // Proceed to build using the right CLI version
+
+/* SLIM VERSION */
 const slim_dockerBuildExitCode = shell.exec(
-  `docker build --file ./dockerfiles/Dockerfile_slim --build-arg SALESFORCE_CLI_VERSION=${SALESFORCE_CLI_VERSION} --tag ${DOCKER_HUB_REPOSITORY}:${DOCKER_IMAGE_VERSION}-slim .`
+  `docker build --file ./dockerfiles/Dockerfile_slim --build-arg SALESFORCE_CLI_VERSION=${SALESFORCE_CLI_VERSION} --tag ${DOCKER_HUB_REPOSITORY}:${DOCKER_IMAGE_VERSION}-Slim .`
 );
+/* FULL VERSION */
 const full_dockerBuildExitCode = shell.exec(
-  `docker build --file ./dockerfiles/Dockerfile_full --build-arg SALESFORCE_CLI_VERSION=${SALESFORCE_CLI_VERSION} --tag ${DOCKER_HUB_REPOSITORY}:${DOCKER_IMAGE_VERSION}-full .`
+  `docker build --file ./dockerfiles/Dockerfile_full --build-arg SALESFORCE_CLI_VERSION=${SALESFORCE_CLI_VERSION} --tag ${DOCKER_HUB_REPOSITORY}:${DOCKER_IMAGE_VERSION}-Full .`
 );
 
 // Push to the Docker Hub Registry
+
+/* SLIM VERSION */
 const slim_dockerPushExitCode = shell.exec(
-  `docker push ${DOCKER_HUB_REPOSITORY}:${DOCKER_IMAGE_VERSION}-slim`
+  `docker push ${DOCKER_HUB_REPOSITORY}:${DOCKER_IMAGE_VERSION}-Slim`
 );
+/* FULL VERSION */
 const full_dockerPushExitCode = shell.exec(
-  `docker push ${DOCKER_HUB_REPOSITORY}:${DOCKER_IMAGE_VERSION}-full`
+  `docker push ${DOCKER_HUB_REPOSITORY}:${DOCKER_IMAGE_VERSION}-Full`
 );
 
 // If we are on the master branch, also update the latest tag on Dockerhub

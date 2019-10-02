@@ -57,7 +57,7 @@ if (checkTags.includes(DOCKER_IMAGE_VERSION)) {
 
 // Proceed to build using the right CLI version
 const dockerBuildExitCode = shell.exec(
-  `docker build --file ../dockerfiles/Dockerfile-full --build-arg SALESFORCE_CLI_VERSION=${SALESFORCE_CLI_VERSION} --tag ${DOCKER_HUB_REPOSITORY}:${DOCKER_IMAGE_VERSION}-Full .`
+  `docker build --file ./dockerfiles/Dockerfile-full --build-arg SALESFORCE_CLI_VERSION=${SALESFORCE_CLI_VERSION} --tag ${DOCKER_HUB_REPOSITORY}:${DOCKER_IMAGE_VERSION}-Full .`
 );
 
 // Push to the Docker Hub Registry

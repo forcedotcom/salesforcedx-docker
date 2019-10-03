@@ -9,7 +9,7 @@ Some guidelines:
    image.
 1. We also have a `latest` tag that matches the `latest` tag on the Salesforce
    CLI.
-1. When running `scripts/publish.js` two verisons of the salesforcedx image will be published (in addition to `latest`) `-slim` and `-full`.
+1. When running `scripts/publish.js` two versions of the salesforcedx image will be published (in addition to `latest`) `-slim` and `-full`.
 
 - The `-slim` image will contian only what is needed for sfdx development, any additional utilities should be added to the `-full` image.
 - `latest` will reflect the `-slim` version of the image.

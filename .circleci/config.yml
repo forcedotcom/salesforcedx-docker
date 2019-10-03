@@ -4,24 +4,17 @@ variables:
   - &node-build-image
     - image: circleci/node:10.14.2-stretch
   - &run-docker-build-slim
-    name: Build Docker Image
+    name: Build Docker Image slim
     command: |
       docker build -f ./dockerfiles/Dockerfile_slim -t $DOCKER_IMAGE:$TAG .
-jobs:
-  sfdx-docker:
-    docker: *node-build-image
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: Setup Environment Variables
-          command: |
-            echo "export DOCKER_IMAGE=circleci/sfdx" >> $BASH_ENV
-            echo "export TAG=$CIRCLE_SHA1" >> $BASH_ENV
-      - run: *run-docker-build-slim
-      - run:
-          name: Verify Build
-          command: |
+  - &run-docker-build-full
+    name: Build Docker Image full
+    command: |
+      docker build -f ./dockerfiles/Dockerfile_full -t $DOCKER_IMAGE:$TAG .
+  - &verify-core-dependencies
+    name: Verify Core Dependencies
+    command: |
+      command: |
             SFDX_CLI_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'sfdx --version')"
             JAVA_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'java --version | head -n 1')"
             NODE_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'node -v')"
@@ -46,6 +39,32 @@ jobs:
               echo "The Node installation could not be verified"
               exit 1
             fi
+  - &verify-add-on-utilities
+    name: Verify Add-On Utilities
+    command: |
+      JQ_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'jq --version')"
+      if [[ ((`echo $JQ_VERSION | grep -c "jq-/"` > 0))]]
+           then
+             echo "jq installed -" $JQ_VERSION 
+           else
+             echo "The jq installation could not be verified"
+             exit 1
+           fi
+jobs:
+  sfdx-docker:
+    docker: *node-build-image
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Setup Environment Variables
+          command: |
+            echo "export DOCKER_IMAGE=circleci/sfdx" >> $BASH_ENV
+            echo "export TAG=$CIRCLE_SHA1" >> $BASH_ENV
+      - run: *run-docker-build-slim
+      - run: *verify-core-dependencies
+      - run: *run-docker-build-full
+      - run: *verify-add-on-utilities
 
 workflows:
   version: 2

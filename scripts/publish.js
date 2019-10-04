@@ -56,13 +56,25 @@ if (checkTags.includes(DOCKER_IMAGE_VERSION)) {
 }
 
 // Proceed to build using the right CLI version
-const dockerBuildExitCode = shell.exec(
-  `docker build --build-arg SALESFORCE_CLI_VERSION=${SALESFORCE_CLI_VERSION} --tag ${DOCKER_HUB_REPOSITORY}:${DOCKER_IMAGE_VERSION} .`
+
+/* SLIM VERSION */
+const slim_dockerBuildExitCode = shell.exec(
+  `docker build --file ./dockerfiles/Dockerfile_slim --build-arg SALESFORCE_CLI_VERSION=${SALESFORCE_CLI_VERSION} --tag ${DOCKER_HUB_REPOSITORY}:${DOCKER_IMAGE_VERSION}-slim .`
+);
+/* FULL VERSION */
+const full_dockerBuildExitCode = shell.exec(
+  `docker build --file ./dockerfiles/Dockerfile_full --build-arg SALESFORCE_CLI_VERSION=${SALESFORCE_CLI_VERSION} --tag ${DOCKER_HUB_REPOSITORY}:${DOCKER_IMAGE_VERSION}-full .`
 );
 
 // Push to the Docker Hub Registry
-const dockerPushExitCode = shell.exec(
-  `docker push ${DOCKER_HUB_REPOSITORY}:${DOCKER_IMAGE_VERSION}`
+
+/* SLIM VERSION */
+const slim_dockerPushExitCode = shell.exec(
+  `docker push ${DOCKER_HUB_REPOSITORY}:${DOCKER_IMAGE_VERSION}-slim`
+);
+/* FULL VERSION */
+const full_dockerPushExitCode = shell.exec(
+  `docker push ${DOCKER_HUB_REPOSITORY}:${DOCKER_IMAGE_VERSION}-full`
 );
 
 // If we are on the master branch, also update the latest tag on Dockerhub
@@ -74,7 +86,7 @@ if (/master/.test(currentBranch)) {
     'We are on the master branch. Proceeding to also tag it as latest'
   );
   shell.exec(
-    `docker tag ${DOCKER_HUB_REPOSITORY}:${SALESFORCE_CLI_VERSION} ${DOCKER_HUB_REPOSITORY}:latest`
+    `docker tag ${DOCKER_HUB_REPOSITORY}:${SALESFORCE_CLI_VERSION}-slim ${DOCKER_HUB_REPOSITORY}:latest`
   );
   shell.exec(`docker push ${DOCKER_HUB_REPOSITORY}:latest`);
 }

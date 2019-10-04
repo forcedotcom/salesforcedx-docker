@@ -3,12 +3,54 @@ version: 2.1
 variables:
   - &node-build-image
     - image: circleci/node:10.14.2-stretch
-  - &run-docker-build
-    name: Build Docker Image
+  - &run-docker-build-slim
+    name: Build Docker Image slim
     command: |
-      docker build -t $DOCKER_IMAGE:$TAG .
+      docker build -f ./dockerfiles/Dockerfile_slim -t $DOCKER_IMAGE:$TAG .
+  - &run-docker-build-full
+    name: Build Docker Image full
+    command: |
+      docker build -f ./dockerfiles/Dockerfile_full -t $DOCKER_IMAGE:$TAG .
+  - &verify-core-dependencies
+    name: Verify Core Dependencies
+    command: |
+      SFDX_CLI_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'sfdx --version')"
+      JAVA_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'java --version | head -n 1')"
+      NODE_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'node -v')"
+      if [[ ((`echo $SFDX_CLI_VERSION | grep -c "sfdx-cli/"` > 0))]]
+      then
+        echo "sfdx-cli installed -" $SFDX_CLI_VERSION 
+      else
+        echo "The sfdx-cli installation could not be verified"
+        exit 1
+      fi
+      if [[ ((`echo $JAVA_VERSION | grep -c "openjdk 11.0.4"` > 0))]]
+      then
+        echo "Java installed -" $JAVA_VERSION 
+      else
+        echo "The Java installation could not be verified"
+        exit 1
+      fi
+      if [[ ((`echo $NODE_VERSION | grep -c "v10.16.2"` > 0))]]
+      then
+        echo "Node installed -" $NODE_VERSION 
+      else
+        echo "The Node installation could not be verified"
+        exit 1
+      fi
+  - &verify-add-on-utilities
+    name: Verify Add-On Utilities
+    command: |
+      JQ_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'jq --version')"
+      if [[ ((`echo $JQ_VERSION | grep -c "jq"` > 0))]]
+           then
+             echo "jq installed -" $JQ_VERSION 
+           else
+             echo "The jq installation could not be verified"
+             exit 1
+           fi
 jobs:
-  sfdx-docker:
+  sfdx-docker-slim:
     docker: *node-build-image
     steps:
       - checkout
@@ -18,49 +60,36 @@ jobs:
           command: |
             echo "export DOCKER_IMAGE=circleci/sfdx" >> $BASH_ENV
             echo "export TAG=$CIRCLE_SHA1" >> $BASH_ENV
-      - run: *run-docker-build
+      - run: *run-docker-build-slim
+      - run: *verify-core-dependencies
+  sfdx-docker-full:
+    docker: *node-build-image
+    steps:
+      - checkout
+      - setup_remote_docker
       - run:
-          name: Verify Build
+          name: Setup Environment Variables
           command: |
-            SFDX_CLI_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'sfdx --version')"
-            JAVA_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'java --version | head -n 1')"
-            NODE_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'node -v')"
-            if [[ ((`echo $SFDX_CLI_VERSION | grep -c "sfdx-cli/"` > 0))]]
-            then
-              echo "sfdx-cli installed -" $SFDX_CLI_VERSION 
-            else
-              echo "The sfdx-cli installation could not be verified"
-              exit 1
-            fi
-            if [[ ((`echo $JAVA_VERSION | grep -c "openjdk 11.0.4"` > 0))]]
-            then
-             echo "Java installed -" $JAVA_VERSION 
-            else
-              echo "The Java installation could not be verified"
-              exit 1
-            fi
-            if [[ ((`echo $NODE_VERSION | grep -c "v10.16.2"` > 0))]]
-            then
-             echo "Node installed -" $NODE_VERSION 
-            else
-              echo "The Node installation could not be verified"
-              exit 1
-            fi
-            
-
+            echo "export DOCKER_IMAGE=circleci/sfdx" >> $BASH_ENV
+            echo "export TAG=$CIRCLE_SHA1" >> $BASH_ENV
+      - run: *run-docker-build-full
+      - run: *verify-core-dependencies
+      - run: *verify-add-on-utilities
 workflows:
   version: 2
   commit-workflow:
     jobs:
-      - sfdx-docker
+      - sfdx-docker-slim
+      - sfdx-docker-full
   scheduled-workflow:
     triggers:
       - schedule:
-          cron: '0 0 * * *'
+          cron: "0 0 * * *"
           filters:
             branches:
               only:
                 - master
                 - develop
     jobs:
-      - sfdx-docker
+      - sfdx-docker-slim
+      - sfdx-docker-full

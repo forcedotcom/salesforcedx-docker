@@ -9,6 +9,10 @@ Some guidelines:
    image.
 1. We also have a `latest` tag that matches the `latest` tag on the Salesforce
    CLI.
+1. When running `scripts/publish.js` two versions of the salesforcedx image will be published (in addition to `latest`) `-slim` and `-full`.
+
+- The `-slim` image will contian only what is needed for sfdx development, any additional utilities should be added to the `-full` image.
+- `latest` will reflect the `-slim` version of the image.
 
 For those interested in publishing, here are some pre-requisites:
 
@@ -24,10 +28,8 @@ Steps:
 1. If necessary, ensure that you are on the `master` branch.
 1. Run `yarn` to bring in the dependencies without making unnecessary changes to
    the lock files.
-1. From the command line execute `SALESFORCE_CLI_VERSION=x.y.z
-   scripts/publish.js` where x.y.z matches the version of the Salesforce CLI
+1. From the command line execute `SALESFORCE_CLI_VERSION=x.y.z scripts/publish.js` where x.y.z matches the version of the Salesforce CLI
    that you are releasing for.
 1. If you need to publish a docker version that is _different_ from the
    Salesforce CLI version (e.g., for a security patch), do
-   `SALESFORCE_CLI_VERSION=x.y.z DOCKER_IMAGE_VERSION=x1.y1.z1
-   scripts/publish.js`
+   `SALESFORCE_CLI_VERSION=x.y.z DOCKER_IMAGE_VERSION=x1.y1.z1 scripts/publish.js`

@@ -50,7 +50,7 @@ variables:
              exit 1
            fi
 jobs:
-  sfdx-docker:
+  sfdx-docker-slim:
     docker: *node-build-image
     steps:
       - checkout
@@ -62,14 +62,26 @@ jobs:
             echo "export TAG=$CIRCLE_SHA1" >> $BASH_ENV
       - run: *run-docker-build-slim
       - run: *verify-core-dependencies
+jobs:
+  sfdx-docker-full:
+    docker: *node-build-image
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Setup Environment Variables
+          command: |
+            echo "export DOCKER_IMAGE=circleci/sfdx" >> $BASH_ENV
+            echo "export TAG=$CIRCLE_SHA1" >> $BASH_ENV
       - run: *run-docker-build-full
+      - run: *verify-core-dependencies
       - run: *verify-add-on-utilities
-
 workflows:
   version: 2
   commit-workflow:
     jobs:
-      - sfdx-docker
+      - sfdx-docker-slim
+      - sfdx-docker-full
   scheduled-workflow:
     triggers:
       - schedule:
@@ -80,4 +92,5 @@ workflows:
                 - master
                 - develop
     jobs:
-      - sfdx-docker
+      - sfdx-docker-slim
+      - sfdx-docker-full

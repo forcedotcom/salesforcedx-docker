@@ -62,7 +62,6 @@ jobs:
             echo "export TAG=$CIRCLE_SHA1" >> $BASH_ENV
       - run: *run-docker-build-slim
       - run: *verify-core-dependencies
-jobs:
   sfdx-docker-full:
     docker: *node-build-image
     steps:

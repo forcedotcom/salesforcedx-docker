@@ -42,7 +42,7 @@ variables:
     name: Verify Add-On Utilities
     command: |
       JQ_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'jq --version')"
-      if [[ ((`echo $JQ_VERSION | grep -c "jq-/"` > 0))]]
+      if [[ ((`echo $JQ_VERSION | grep -c "jq"` > 0))]]
            then
              echo "jq installed -" $JQ_VERSION 
            else

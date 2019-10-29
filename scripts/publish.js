@@ -59,11 +59,11 @@ if (checkTags.includes(DOCKER_IMAGE_VERSION)) {
 
 /* SLIM VERSION */
 const slim_dockerBuildExitCode = shell.exec(
-  `docker build --file ./dockerfiles/Dockerfile_slim --build-arg SALESFORCE_CLI_VERSION=${SALESFORCE_CLI_VERSION} --tag ${DOCKER_HUB_REPOSITORY}:${DOCKER_IMAGE_VERSION}-slim .`
+  `docker build --file ./dockerfiles/Dockerfile_slim --build-arg SALESFORCE_CLI_VERSION=${SALESFORCE_CLI_VERSION} --tag ${DOCKER_HUB_REPOSITORY}:${DOCKER_IMAGE_VERSION}-slim --no-cache .`
 );
 /* FULL VERSION */
 const full_dockerBuildExitCode = shell.exec(
-  `docker build --file ./dockerfiles/Dockerfile_full --build-arg SALESFORCE_CLI_VERSION=${SALESFORCE_CLI_VERSION} --tag ${DOCKER_HUB_REPOSITORY}:${DOCKER_IMAGE_VERSION}-full .`
+  `docker build --file ./dockerfiles/Dockerfile_full --build-arg SALESFORCE_CLI_VERSION=${SALESFORCE_CLI_VERSION} --tag ${DOCKER_HUB_REPOSITORY}:${DOCKER_IMAGE_VERSION}-full --no-cache .`
 );
 
 // Push to the Docker Hub Registry

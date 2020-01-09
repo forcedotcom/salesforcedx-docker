@@ -86,9 +86,13 @@ if (/master/.test(currentBranch)) {
     'We are on the master branch. Proceeding to also tag it as latest'
   );
   shell.exec(
-    `docker tag ${DOCKER_HUB_REPOSITORY}:${SALESFORCE_CLI_VERSION}-slim ${DOCKER_HUB_REPOSITORY}:latest`
+    `docker tag ${DOCKER_HUB_REPOSITORY}:${SALESFORCE_CLI_VERSION}-slim ${DOCKER_HUB_REPOSITORY}:latest-slim`
   );
-  shell.exec(`docker push ${DOCKER_HUB_REPOSITORY}:latest`);
+  shell.exec(`docker push ${DOCKER_HUB_REPOSITORY}:latest-slim`);
+  shell.exec(
+    `docker tag ${DOCKER_HUB_REPOSITORY}:${SALESFORCE_CLI_VERSION}-full ${DOCKER_HUB_REPOSITORY}:latest-full`
+  );
+  shell.exec(`docker push ${DOCKER_HUB_REPOSITORY}:latest-full`);
 }
 
 // Create a git tag if we are publishing a specific version

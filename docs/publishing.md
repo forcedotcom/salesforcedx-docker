@@ -7,7 +7,7 @@ Some guidelines:
 1. We publish from the master branch.
 1. We specify a specific tag that matches the Salesforce CLI version for each
    image.
-1. We also have a `latest-slim` and `latest-full` tags that matches for the latest version of the Salesforce
+1. We also have a `latest-slim` and `latest-full` tags that matches with the latest version of the Salesforce
    CLI.
 1. When running `scripts/publish.js` two versions of the salesforcedx image will be published (in addition to `latest-slim` and `latest-full`) `-slim` and `-full`.
 

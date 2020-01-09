@@ -7,12 +7,11 @@ Some guidelines:
 1. We publish from the master branch.
 1. We specify a specific tag that matches the Salesforce CLI version for each
    image.
-1. We also have a `latest` tag that matches the `latest` tag on the Salesforce
+1. We also have a `latest-slim` and `latest-full` tags that matches with the latest version of the Salesforce
    CLI.
-1. When running `scripts/publish.js` two versions of the salesforcedx image will be published (in addition to `latest`) `-slim` and `-full`.
+1. When running `scripts/publish.js` two versions of the salesforcedx image will be published (in addition to `latest-slim` and `latest-full`) `-slim` and `-full`.
 
-- The `-slim` image will contian only what is needed for sfdx development, any additional utilities should be added to the `-full` image.
-- `latest` will reflect the `-slim` version of the image.
+- The `-slim` image will contain only what is needed for sfdx development, any additional utilities should be added to the `-full` image.
 
 For those interested in publishing, here are some pre-requisites:
 

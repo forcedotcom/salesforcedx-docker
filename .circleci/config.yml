@@ -78,6 +78,8 @@ jobs:
   validate-for-release:
     docker: *node-build-image
     steps:
+      - checkout
+      - setup_remote_docker
       - run:
           name: Check for Docker Image Release
           command: |

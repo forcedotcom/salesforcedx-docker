@@ -75,12 +75,24 @@ jobs:
       - run: *run-docker-build-full
       - run: *verify-core-dependencies
       - run: *verify-add-on-utilities
+  validate-for-release:
+    docker: *node-build-image
+    steps:
+      - run:
+          name: Check for Docker Image Release
+          command: |
+            echo 'Determining if a new image should be published to Docker'
+            scripts/validateForRelease.js
 workflows:
   version: 2
   commit-workflow:
     jobs:
       - sfdx-docker-slim
       - sfdx-docker-full
+      - validate-for-release:
+          requires:
+            - sfdx-docker-slim
+            - sfdx-docker-full
   scheduled-workflow:
     triggers:
       - schedule:

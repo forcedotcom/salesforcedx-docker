@@ -5,7 +5,7 @@ shell.set('-e');
 shell.set('+v');
 
 // This needs to change when we are ready to publish
-const DOCKER_HUB_REPOSITORY = 'salesforce/salesforcedx';
+const DOCKER_HUB_REPOSITORY = 'jonnyhork/salesforcedx'; // TODO: REMOVE BEFORE MERGE
 
 // Checks that you have the Docker CLI installed
 if (!shell.which('docker')) {
@@ -79,7 +79,7 @@ const full_dockerPushExitCode = shell.exec(
 
 // If we are on the master branch, also update the latest tag on Dockerhub
 const currentBranch = shell.exec('git rev-parse --abbrev-ref HEAD', {
-  silent: true
+  silent: true,
 }).stdout;
 if (/master/.test(currentBranch)) {
   shell.echo(

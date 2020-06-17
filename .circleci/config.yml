@@ -84,6 +84,7 @@ jobs:
           name: Check for Docker Image Release
           command: |
             echo 'Determining if a new image should be published to Docker'
+            yarn
             scripts/validateForRelease.js
 workflows:
   version: 2

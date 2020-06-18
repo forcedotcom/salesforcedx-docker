@@ -6,7 +6,7 @@ orbs:
 _refs:
   ssh-config: &ssh-config
     fingerprints:
-      - "9a:e3:77:bd:52:9f:d2:93:56:68:36:56:e3:54:7b:f1"
+      - "1d:10:ed:6e:af:cd:73:65:1f:49:f9:a6:be:06:86:19"
   gh-config: &gh-config
     name: Configuring GitHub
     command: |

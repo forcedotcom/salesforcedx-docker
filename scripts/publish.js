@@ -15,17 +15,14 @@ if (!shell.which('docker')) {
 
 // Checks that you have logged into docker hub
 // Unfortunately I don't think there is a way to check what repositories you have access to
-const isRunningInCircleCI = process.env['CIRCLECI'];
-if (!isRunningInCircleCI) {
-  const AUTH_REGEX = '"https://index.docker.io/v1/"';
-  if (
-    !new RegExp(AUTH_REGEX).test(
-      shell.grep(AUTH_REGEX, '~/.docker/config.json').stdout
-    )
-  ) {
-    shell.echo('You are not logged into Docker Hub. Try `docker login`.');
-    shell.exit(-1);
-  }
+const AUTH_REGEX = '"https://index.docker.io/v1/"';
+if (
+  !new RegExp(AUTH_REGEX).test(
+    shell.grep(AUTH_REGEX, '~/.docker/config.json').stdout
+  )
+) {
+  shell.echo('You are not logged into Docker Hub. Try `docker login`.');
+  shell.exit(-1);
 }
 
 // Checks that there are no uncommitted changes

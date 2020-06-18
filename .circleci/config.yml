@@ -1,5 +1,20 @@
 version: 2.1
 
+_refs:
+  ssh-config: &ssh-config
+    fingerprints:
+      - "90:55:f2:56:40:ae:48:c4:3c:e2:2c:84:55:2d:1a:42"
+  gh-config: &gh-config
+    name: Configuring GitHub
+    command: |
+      git config credential.helper 'cache --timeout=120'
+      git config user.email "$GH_EMAIL"
+      git config user.name "pwtautomation"
+  docker-hub-login: &docker-hub-login
+    name: Sign into Docker Hub
+    command: |
+      echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+
 variables:
   - &node-build-image
     - image: circleci/node:10.14.2-stretch
@@ -78,13 +93,16 @@ jobs:
   validate-for-release:
     docker: *node-build-image
     steps:
+      - add_ssh_keys: *ssh-config
       - checkout
       - setup_remote_docker
+      - configure_github: *gh-config
+      - docker_hub_login: *docker-hub-login
+      - run: yarn
       - run:
           name: Check for Docker Image Release
           command: |
             echo 'Determining if a new image should be published to Docker'
-            yarn
             scripts/validateForRelease.js
 workflows:
   version: 2

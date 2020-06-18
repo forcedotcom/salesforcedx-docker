@@ -96,8 +96,8 @@ jobs:
       - add_ssh_keys: *ssh-config
       - checkout
       - setup_remote_docker
-      - configure_github: *gh-config
-      - docker_hub_login: *docker-hub-login
+      - run: *gh-config
+      - run: *docker-hub-login
       - run: yarn
       - run:
           name: Check for Docker Image Release

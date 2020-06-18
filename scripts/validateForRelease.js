@@ -34,7 +34,7 @@ const shouldPublishNewImage =
 if (shouldPublishNewImage) {
   console.log('CLI ❌ SFDX-Image. 🚀 🐳 ');
   shell.exec(
-    `SALESFORCE_CLI_VERSION=${latest_stable_CLI_version}-CItest scripts/publish.js`
+    `SALESFORCE_CLI_VERSION=${latest_stable_CLI_version} scripts/publish.js`
   );
 } else {
   console.log('CLI ✅ SFDX-Image are in sync.');

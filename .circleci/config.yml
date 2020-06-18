@@ -114,9 +114,6 @@ workflows:
       - sfdx-docker-slim
       - sfdx-docker-full
       - validate-for-release
-        # requires:
-        #   - sfdx-docker-slim
-        #   - sfdx-docker-full
   scheduled-workflow:
     triggers:
       - schedule:

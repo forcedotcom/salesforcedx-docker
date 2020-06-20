@@ -1,5 +1,20 @@
 version: 2.1
 
+_refs:
+  ssh-config: &ssh-config
+    fingerprints:
+      - "eb:20:59:c6:ed:8b:9c:f9:91:fc:ea:f1:78:c7:6e:94"
+  gh-config: &gh-config
+    name: Configuring GitHub
+    command: |
+      git config credential.helper 'cache --timeout=120'
+      git config user.email "$GH_EMAIL"
+      git config user.name "pwtautomation"
+  docker-hub-login: &docker-hub-login
+    name: Sign into Docker Hub
+    command: |
+      echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+
 variables:
   - &node-build-image
     - image: circleci/node:10.14.2-stretch
@@ -75,13 +90,27 @@ jobs:
       - run: *run-docker-build-full
       - run: *verify-core-dependencies
       - run: *verify-add-on-utilities
+  validate-for-release:
+    docker: *node-build-image
+    steps:
+      - add_ssh_keys: *ssh-config
+      - checkout
+      - setup_remote_docker
+      - run: *gh-config
+      - run: *docker-hub-login
+      - run: yarn
+      - run:
+          name: Check for Docker Image Release
+          command: |
+            echo 'Determining if a new image should be published to Docker'
+            scripts/validateForRelease.js
 workflows:
   version: 2
   commit-workflow:
     jobs:
       - sfdx-docker-slim
       - sfdx-docker-full
-  scheduled-workflow:
+  nightly-build-workflow:
     triggers:
       - schedule:
           cron: "0 0 * * *"
@@ -93,3 +122,13 @@ workflows:
     jobs:
       - sfdx-docker-slim
       - sfdx-docker-full
+  nightly-release-workflow:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - validate-for-release

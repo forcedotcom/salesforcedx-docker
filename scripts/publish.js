@@ -79,7 +79,7 @@ const full_dockerPushExitCode = shell.exec(
 
 // If we are on the master branch, also update the latest tag on Dockerhub
 const currentBranch = shell.exec('git rev-parse --abbrev-ref HEAD', {
-  silent: true
+  silent: true,
 }).stdout;
 if (/master/.test(currentBranch)) {
   shell.echo(
@@ -100,7 +100,7 @@ if (!/latest/.test(DOCKER_IMAGE_VERSION)) {
   shell.exec(`echo ${DOCKER_IMAGE_VERSION} > version.txt`);
   shell.exec(`git add version.txt`);
   shell.exec(`git commit -a -m "Publish version: ${DOCKER_IMAGE_VERSION}"`);
-  shell.exec(`git push`);
+  shell.exec(`git push --set-upstream origin ${currentBranch}`);
   shell.exec(`git tag ${DOCKER_IMAGE_VERSION}`);
   shell.exec(`git push --tags`);
 }

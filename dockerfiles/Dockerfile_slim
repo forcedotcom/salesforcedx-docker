@@ -2,8 +2,8 @@ FROM heroku/heroku:18
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
-RUN echo 'a028cba3dbb87635c2907c116de248fa93c29dff5e3f68d0f027c05b0f5e15ae  ./nodejs.deb' > node-file-lock.sha \
-  && curl -s -o nodejs.deb https://deb.nodesource.com/node_12.x/pool/main/n/nodejs/nodejs_12.18.1-deb-1nodesource1_amd64.deb \
+RUN echo 'b78fc542858b83a96d712d6a2f493ae87e1af55040bc55fb68671af191016d19  ./nodejs.deb' > node-file-lock.sha \
+  && curl -s -o nodejs.deb https://nodejs.org/dist/v12.18.1/node-v12.18.1-linux-arm64.tar.gz  \
   && shasum --check node-file-lock.sha
 RUN apt-get install --assume-yes \
   ./nodejs.deb \ 

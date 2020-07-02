@@ -17,7 +17,7 @@ _refs:
 
 variables:
   - &node-build-image
-    - image: circleci/node:10.14.2-stretch
+    - image: circleci/node:12.18.2-stretch
   - &run-docker-build-slim
     name: Build Docker Image slim
     command: |

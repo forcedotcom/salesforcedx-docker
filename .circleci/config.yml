@@ -46,7 +46,7 @@ variables:
         echo "The Java installation could not be verified"
         exit 1
       fi
-      if [[ ((`echo $NODE_VERSION | grep -c "v12.18.1"` > 0))]]
+      if [[ ((`echo $NODE_VERSION | grep -c "v12.18.2"` > 0))]]
       then
         echo "Node installed -" $NODE_VERSION 
       else

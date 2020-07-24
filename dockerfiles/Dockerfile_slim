@@ -9,7 +9,7 @@ RUN mkdir /usr/local/lib/nodejs \
   && tar xf nodejs.tar.gz -C /usr/local/lib/nodejs/ --strip-components 1 \
   && rm nodejs.tar.gz node-file-lock.sha
 RUN apt-get install --assume-yes \
-  openjdk-11-jdk-headless=11.0.7+10-2ubuntu2~18.04 \
+  openjdk-11-jdk-headless \
   && mkdir ~/.sfdx-cli \
   && wget -qO- https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz | tar xJ -C ~/.sfdx-cli --strip-components 1 \
   && ~/.sfdx-cli/install

@@ -77,13 +77,13 @@ const full_dockerPushExitCode = shell.exec(
   `docker push ${DOCKER_HUB_REPOSITORY}:${DOCKER_IMAGE_VERSION}-full`
 );
 
-// If we are on the master branch, also update the latest tag on Dockerhub
+// If we are on the main branch, also update the latest tag on Dockerhub
 const currentBranch = shell.exec('git rev-parse --abbrev-ref HEAD', {
   silent: true,
 }).stdout;
-if (/master/.test(currentBranch)) {
+if (/main/.test(currentBranch)) {
   shell.echo(
-    'We are on the master branch. Proceeding to also tag latest-slim and latest-full builds'
+    'We are on the main branch. Proceeding to also tag latest-slim and latest-full builds'
   );
   shell.exec(
     `docker tag ${DOCKER_HUB_REPOSITORY}:${SALESFORCE_CLI_VERSION}-slim ${DOCKER_HUB_REPOSITORY}:latest-slim`

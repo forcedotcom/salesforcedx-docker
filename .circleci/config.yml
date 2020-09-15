@@ -3,7 +3,7 @@ version: 2.1
 _refs:
   ssh-config: &ssh-config
     fingerprints:
-      - "eb:20:59:c6:ed:8b:9c:f9:91:fc:ea:f1:78:c7:6e:94"
+      - 'eb:20:59:c6:ed:8b:9c:f9:91:fc:ea:f1:78:c7:6e:94'
   gh-config: &gh-config
     name: Configuring GitHub
     command: |
@@ -113,11 +113,11 @@ workflows:
   nightly-build-workflow:
     triggers:
       - schedule:
-          cron: "0 0 * * *"
+          cron: '0 0 * * *'
           filters:
             branches:
               only:
-                - master
+                - main
                 - develop
     jobs:
       - sfdx-docker-slim
@@ -125,10 +125,10 @@ workflows:
   nightly-release-workflow:
     triggers:
       - schedule:
-          cron: "0 0 * * *"
+          cron: '0 0 * * *'
           filters:
             branches:
               only:
-                - master
+                - main
     jobs:
       - validate-for-release

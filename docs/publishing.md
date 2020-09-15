@@ -4,7 +4,7 @@ https://hub.docker.com/r/salesforce/salesforcedx.
 
 Some guidelines:
 
-1. We publish from the master branch.
+1. We publish from the main branch.
 1. We specify a specific tag that matches the Salesforce CLI version for each
    image.
 1. We also have a `latest-slim` and `latest-full` tags that matches with the latest version of the Salesforce
@@ -24,7 +24,7 @@ For those interested in publishing, here are some pre-requisites:
 Steps:
 
 1. Clone this repository.
-1. If necessary, ensure that you are on the `master` branch.
+1. If necessary, ensure that you are on the `main` branch.
 1. Run `yarn` to bring in the dependencies without making unnecessary changes to
    the lock files.
 1. From the command line execute `SALESFORCE_CLI_VERSION=x.y.z scripts/publish.js` where x.y.z matches the version of the Salesforce CLI

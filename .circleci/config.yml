@@ -113,12 +113,13 @@ workflows:
   nightly-build-workflow:
     triggers:
       - schedule:
-          cron: '0 0 * * *'
+          cron: '2 * * * *'
           filters:
             branches:
               only:
-                - main
-                - develop
+                - jhork/debug-cron-job
+                # - main
+                # - develop
     jobs:
       - sfdx-docker-slim
       - sfdx-docker-full
@@ -132,3 +133,5 @@ workflows:
                 - main
     jobs:
       - validate-for-release
+# The cron format is:
+# min (0-59) hour (0-23) monthday (1-31) month (1-12) weekday (0-6, 0=Sun)

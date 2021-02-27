@@ -8,11 +8,13 @@ RUN echo '2d316e55994086e41761b0c657e0027e9d16d7160d3f8854cc9dc7615b99a526  ./no
 RUN mkdir /usr/local/lib/nodejs \
   && tar xf nodejs.tar.gz -C /usr/local/lib/nodejs/ --strip-components 1 \
   && rm nodejs.tar.gz node-file-lock.sha
+
+ENV PATH=/usr/local/lib/nodejs/bin:/usr/local/lib/nodejs/lib/node_modules:$PATH
+RUN npm install --global sfdx-cli
+
 RUN apt-get install --assume-yes \
-  openjdk-11-jdk-headless \
-  && mkdir ~/.sfdx-cli \
-  && wget -qO- https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz | tar xJ -C ~/.sfdx-cli --strip-components 1 \
-  && ~/.sfdx-cli/install
+  openjdk-11-jdk-headless 
+  
   
 
 RUN apt-get autoremove --assume-yes \

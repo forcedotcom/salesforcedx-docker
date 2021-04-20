@@ -3,7 +3,7 @@ version: 2.1
 _refs:
   ssh-config: &ssh-config
     fingerprints:
-      - 'eb:20:59:c6:ed:8b:9c:f9:91:fc:ea:f1:78:c7:6e:94'
+      - '23:80:e1:42:07:a8:ab:47:1c:26:d4:69:a4:eb:a4:f1'
   gh-config: &gh-config
     name: Configuring GitHub
     command: |

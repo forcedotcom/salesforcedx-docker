@@ -110,7 +110,6 @@ workflows:
     jobs:
       - sfdx-docker-slim
       - sfdx-docker-full
-      - validate-for-release
   nightly-build-workflow:
     triggers:
       - schedule:

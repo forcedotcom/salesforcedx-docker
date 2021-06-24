@@ -1,0 +1,134 @@
+# version: 2.1
+
+# _refs:
+#   ssh-config: &ssh-config
+#     fingerprints:
+#       - '23:5f:a2:4b:35:84:8d:91:86:f3:1c:09:ef:93:50:48'
+#   gh-config: &gh-config
+#     name: Configuring GitHub
+#     command: |
+#       git config credential.helper 'cache --timeout=120'
+#       git config user.email "$GH_EMAIL"
+#       git config user.name "pwtautomation"
+#   docker-hub-login: &docker-hub-login
+#     name: Sign into Docker Hub
+#     command: |
+#       echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+
+# variables:
+#   - &node-build-image
+#     - image: circleci/node:12.18.2-stretch
+#   - &run-docker-build-slim
+#     name: Build Docker Image slim
+#     command: |
+#       docker build -f ./dockerfiles/Dockerfile_slim -t $DOCKER_IMAGE:$TAG .
+#   - &run-docker-build-full
+#     name: Build Docker Image full
+#     command: |
+#       docker build -f ./dockerfiles/Dockerfile_full -t $DOCKER_IMAGE:$TAG .
+#   - &verify-core-dependencies
+#     name: Verify Core Dependencies
+#     command: |
+#       SFDX_CLI_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'sfdx --version')"
+#       JAVA_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'java --version | head -n 1')"
+#       NODE_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'node -v')"
+#       if [[ ((`echo $SFDX_CLI_VERSION | grep -c "sfdx-cli/"` > 0))]]
+#       then
+#         echo "sfdx-cli installed -" $SFDX_CLI_VERSION
+#       else
+#         echo "The sfdx-cli installation could not be verified"
+#         exit 1
+#       fi
+#       if [[ ((`echo $JAVA_VERSION | grep -c "openjdk"` > 0))]]
+#       then
+#         echo "Java installed -" $JAVA_VERSION
+#       else
+#         echo "The Java installation could not be verified"
+#         exit 1
+#       fi
+#       if [[ ((`echo $NODE_VERSION | grep -c "v12.18.2"` > 0))]]
+#       then
+#         echo "Node installed -" $NODE_VERSION
+#       else
+#         echo "The Node installation could not be verified"
+#         exit 1
+#       fi
+#   - &verify-add-on-utilities
+#     name: Verify Add-On Utilities
+#     command: |
+#       JQ_VERSION="$(docker run -it --rm $DOCKER_IMAGE:$TAG bash -c 'jq --version')"
+#       if [[ ((`echo $JQ_VERSION | grep -c "jq"` > 0))]]
+#            then
+#              echo "jq installed -" $JQ_VERSION
+#            else
+#              echo "The jq installation could not be verified"
+#              exit 1
+#            fi
+# jobs:
+#   sfdx-docker-slim:
+#     docker: *node-build-image
+#     steps:
+#       - checkout
+#       - setup_remote_docker
+#       - run:
+#           name: Setup Environment Variables
+#           command: |
+#             echo "export DOCKER_IMAGE=circleci/sfdx" >> $BASH_ENV
+#             echo "export TAG=$CIRCLE_SHA1" >> $BASH_ENV
+#       - run: *run-docker-build-slim
+#       - run: *verify-core-dependencies
+#   sfdx-docker-full:
+#     docker: *node-build-image
+#     steps:
+#       - checkout
+#       - setup_remote_docker
+#       - run:
+#           name: Setup Environment Variables
+#           command: |
+#             echo "export DOCKER_IMAGE=circleci/sfdx" >> $BASH_ENV
+#             echo "export TAG=$CIRCLE_SHA1" >> $BASH_ENV
+#       - run: *run-docker-build-full
+#       - run: *verify-core-dependencies
+#       - run: *verify-add-on-utilities
+#   validate-for-release:
+#     docker: *node-build-image
+#     steps:
+#       - add_ssh_keys: *ssh-config
+#       - checkout
+#       - setup_remote_docker
+#       - run: *gh-config
+#       - run: *docker-hub-login
+#       - run: yarn
+#       - run:
+#           name: Check for Docker Image Release
+#           command: |
+#             echo 'Determining if a new image should be published to Docker'
+#             scripts/validateForRelease.js
+# workflows:
+#   version: 2
+#   commit-workflow:
+#     jobs:
+#       - sfdx-docker-slim
+#       - sfdx-docker-full
+#   nightly-build-workflow:
+#     triggers:
+#       - schedule:
+#           cron: '0 0 * * *'
+#           filters:
+#             branches:
+#               only:
+#                 - main
+#                 - develop
+#     jobs:
+#       - sfdx-docker-slim
+#       - sfdx-docker-full
+#   nightly-release-workflow:
+#     triggers:
+#       - schedule:
+#           cron: '0 0 * * *'
+#           filters:
+#             branches:
+#               only:
+#                 - main
+#     jobs:
+#       - validate-for-release
